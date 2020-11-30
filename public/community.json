@@ -1,0 +1,123 @@
+{
+  "name": "电影",
+  "children": [
+    {
+      "name": "社区1",
+      "children": [
+        {
+          "name": "tom",
+          "value": 42
+        },
+        {
+          "name": "jack",
+          "value": 51
+        },
+        {
+          "name": "tom",
+          "value": 471
+        },
+        {
+          "name": "tom",
+          "value": 304
+        },
+        {
+          "name": "tom",
+          "value": 86
+        },
+        {
+          "name": "tom",
+          "value": 431
+        },
+        {
+          "name": "tom",
+          "value": 1021
+        },
+        {
+          "name": "tom",
+          "value": 906
+        },
+        {
+          "name": "tom",
+          "value": 1036
+        },
+        {
+          "name": "tom",
+          "value": 2019
+        },
+        {
+          "name": "tom",
+          "value": 1451
+        },
+        {
+          "name": "tom",
+          "value": 1344
+        },
+        {
+          "name": "tom",
+          "value": 950
+        },
+        {
+          "name": "tom",
+          "value": 2229
+        },
+        {
+          "name": "tom",
+          "value": 2123
+        },
+        {
+          "name": "tom",
+          "value": 1994
+        }
+      ]
+    },
+    {
+      "name": "社区2",
+      "children": [
+        {
+          "name": "jack",
+          "value": 34
+        },
+        {
+          "name": "jack",
+          "value": 59
+        },
+        {
+          "name": "jack",
+          "value": 90
+        },
+        {
+          "name": "jack",
+          "value": 96
+        },
+        {
+          "name": "jack",
+          "value": 796
+        },
+        {
+          "name": "jack",
+          "value": 484
+        },
+        {
+          "name": "jack",
+          "value": 786
+        },
+        {
+          "name": "jack",
+          "value": 970
+        },
+        {
+          "name": "jack",
+          "value": 527
+        },
+        {
+          "name": "tom",
+          "value": 1616
+        },
+        {
+          "name": "tom",
+          "value": 1974
+        }
+      ]
+    }
+  ]
+}
