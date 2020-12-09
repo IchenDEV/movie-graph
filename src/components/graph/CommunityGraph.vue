@@ -22,6 +22,20 @@ export default {
    }
   },
   methods:{
+    colorScale(type) {
+      switch (type) {
+        case 0:
+          return "#a3f364";
+        case 1:
+          return "#ffa1a1"
+        case 2:
+          return "#a059f3"
+        case 3:
+          return "#14ffc9"
+        default:
+          return "#ffa306"
+      }
+    },
     draw(){
       const containerWidth = this.$refs.chartRef.parentElement.offsetWidth;
 
@@ -38,14 +52,12 @@ export default {
           .append("g")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // 设最外包层在总图上的相对位置
 
-      const z = d3.scaleOrdinal(d3.schemeCategory10); // 通用线条的颜色
-
       const root = d3
           .hierarchy(this.data) //数据分层
-          .sum(function (d) {
+          .sum( (d)=> {
             return d.value;
           })
-          .sort(function (a, b) {
+          .sort( (a, b) =>{
             return b.value - a.value;
           });
 
@@ -61,10 +73,10 @@ export default {
           .data(root.descendants())
           .enter()
           .append("g")
-          .attr("transform", function (d) {
+          .attr("transform",  (d)=> {
             return "translate(" + d.x + "," + d.y + ")";
           })
-          .attr("class", function (d) {
+          .attr("class",  (d) =>{
             return (
                 "node" + (!d.children ? " node--leaf" : d.depth ? "" : " node--root")
             );
@@ -89,8 +101,8 @@ export default {
                 Math.floor(d.y)
             ); // 用r+x+y生成唯一id，原创思路
           })
-          .style("fill", function (d) {
-            return z(d.depth);
+          .style("fill",  (d)=> {
+            return this.colorScale(d.depth);
           })
           .attr("r", 0)
           .transition()
@@ -150,10 +162,10 @@ export default {
           .enter()
           .append("tspan")
           .attr("x", 0)
-          .attr("y", function (d, i, nodes) {
+          .attr("y",  (d, i, nodes)=> {
             return 13 + (i - nodes.length / 2 - 0.5) * 12;
           })
-          .text(function (d) {
+          .text( (d) =>{
             return d;
           });
 
@@ -176,20 +188,19 @@ export default {
           .enter()
           .append("tspan")
           .style("fill", "#fff")
-          .style("font-size", "42px")
+          .style("font-size", "2px")
           .attr("x", 0)
-          .attr("y", function (d, i, nodes) {
+          .attr("y",  (d, i, nodes)=> {
             return 70 + (i - nodes.length / 2 - 0.5) * 70;
           })
-          .text(function (d) {
+          .text( (d) =>{
             return d;
           });
 
       function hovered(hover) {
-        // mouseover把所有老祖宗都圈线
         return function (d, c) {
           d3.selectAll(
-              c.ancestors().map(function (d) {
+              c.ancestors().map( (d)=>{
                 return d.node;
               })
           ).classed("node--hover", hover);
@@ -206,8 +217,7 @@ export default {
 }
 
 .simple-pack-chart text {
-  font: 1rem sans-serif;
-  text-anchor: middle;
+  font: 0.2rem sans-serif;
   fill: #ffffff;
 }
 

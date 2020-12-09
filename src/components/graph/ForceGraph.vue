@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg ref="chartRef"/>
+    <svg ref="chartRef" />
   </div>
 </template>
 
@@ -14,168 +14,201 @@ export default {
       links: null,
       linksText: null,
       gs: null,
-      svg: null
-
-    }
+      svg: null,
+    };
   },
-  props: ['data'],
+  props: ["data"],
   watch: {
-    data(newone, oldone) {
-      if (newone !== null && newone !== oldone)
-        this.draw();
-
-    }
+    data: {
+      handler(newone, oldone) {
+        if (newone !== null) this.draw();
+      },
+      immediate: true,
+      deep: true,
+    },
   },
   mounted() {
-    if (this.data)
-      this.draw();
-
+    if (this.data) this.draw();
   },
   methods: {
+    setLinkNumbers(group) {
+      const len = group.length;
+      const linksA = [];
+      const linksB = [];
+      for (let i = 0; i < len; i++) {
+        const link = group[i];
+        if (link.source.name < link.target.name) {
+          linksA.push(link);
+        } else {
+          linksB.push(link);
+        }
+      }
+      let startLinkANumber = 1;
+      linksA.forEach((linkA) => {
+        linkA.linknum = startLinkANumber++;
+      });
+      let startLinkBNumber = -1;
+      linksB.forEach((linkB) => {
+        linkB.linknum = startLinkBNumber--;
+      });
+    },
     draw() {
       const nodes = this.data.nodes;
       const edges = this.data.relationships;
-      if (this.svg) {
-        this.$refs.chartRef.childNodes.forEach(i=>i.remove())
-      }
+      if (this.svg) this.$refs.chartRef.childNodes.forEach((i) => i.remove());
 
       const containerWidth = this.$refs.chartRef.parentElement.offsetWidth;
       const containerHeight = this.$refs.chartRef.parentElement.offsetHeight;
-      const margin = {top: 10, right: 10, bottom: 10, left: 10};
+      const margin = { top: 10, right: 10, bottom: 10, left: 10 };
       const width = containerWidth - margin.left - margin.right;
       const height = containerHeight - margin.top - margin.bottom;
-      this.svg = d3.select(this.$refs.chartRef)
-          .attr("width", width)
-          .attr("height", height);
+      this.svg = d3
+        .select(this.$refs.chartRef)
+        .attr("width", width)
+        .attr("height", height);
+      const marge = { top: 10, bottom: 10, left: 10, right: 10 };
+      const g = this.svg
+        .append("g")
+        .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
 
-      var marge = {top: 10, bottom: 10, left: 10, right: 10}
-      var g = this.svg.append("g")
-          .attr("transform", "translate(" + marge.top + "," + marge.left + ")");
-
-
-      this.forceSimulation = d3.forceSimulation()
-          .force("link", d3.forceLink().id((d) => {
+      this.forceSimulation = d3
+        .forceSimulation()
+        .force(
+          "link",
+          d3.forceLink().id((d) => {
             return d.id;
-          }))
-          .force("charge", d3.forceManyBody())
-          .force("center", d3.forceCenter());
+          })
+        )
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("charge", d3.forceManyBody().strength(-20))
+        .force(
+          "collide",
+          d3
+            .forceCollide()
+            .radius(30)
+            .iterations(2)
+        );
+
+      const linkGroup = {};
+      // 两点之间的线根据两点的 name 属性设置为同一个 key，加入到 linkGroup 中，给两点之间的所有边分成一个组
+      edges.forEach((link) => {
+        const key =
+          link.source.name < link.target.name
+            ? link.source.name + ":" + link.target.name
+            : link.target.name + ":" + link.source.name;
+        if (!linkGroup.hasOwnProperty(key)) {
+          linkGroup[key] = [];
+        }
+        linkGroup[key].push(link);
+        link.size = linkGroup[key].length;
+        const group = linkGroup[key];
+        const keyPair = key.split(":");
+        let type = "noself";
+        if (keyPair[0] === keyPair[1]) {
+          type = "self";
+        }
+        this.setLinkNumbers(group, type);
+      });
 
       this.forceSimulation.nodes(nodes).on("tick", this.ticked);
+      this.forceSimulation
+        .force("link")
+        .links(edges)
+        .distance((d) => {
+          return 100;
+        });
 
-      this.forceSimulation.force("link").links(edges).distance((d) => {
-        return 150;
-      })
+      this.links = g
+        .append("g")
+        .selectAll("line")
+        .data(edges)
+        .enter()
+        .append("line")
+        .style("stroke", "#9aaabf")
+        .style("stroke-width", 1)
+        .style("fill-opacity", 0)
+        .attr("id", function(d, i) {
+          return "line" + i;
+        })
+        .style("cursor", "pointer");
 
-      this.forceSimulation.force("center")
-          .x(width / 2)
-          .y(height / 2);
+      this.linksText = g
+        .append("g")
+        .selectAll("text")
+        .data(edges)
+        .enter()
+        .append("text")
+        .style("pointer-events", "none")
+        .attr("class", "line-text")
+        .style("cursor", "pointer")
+        .attr("pointer-events", "none")
+        .attr("xlink:href", function(d, i) {
+          return "#line" + i;
+        })
+        .text((d) => {
+          return d.type;
+        });
 
-      this.links = g.append("g")
-          .selectAll("line")
-          .data(edges)
-          .enter()
-          .append("line")
-          .attr("marker-end", (d, i) => {
-            return this.getMarkerArrow(i);
-          })//根据箭头标记的id号标记箭头
-          .style("stroke", '#9aaabf')
-          .style("stroke-width", 1)//线条粗细
-          .style("fill-opacity", 0)
-          .attr("id", function (d, i) {
-            return 'line' + i;
-          })
-          .style("cursor", "pointer")
+      this.gs = g
+        .selectAll(".circleText")
+        .data(nodes)
+        .enter()
+        .append("g")
+        .style("cursor", "pointer")
+        .attr("transform", (d, i) => {
+          return "translate(" + d.x + "," + d.y + ")";
+        })
+        .call(
+          d3
+            .drag()
+            .on("start", this.dragStarted)
+            .on("drag", this.dragged)
+            .on("end", this.dragEnded)
+        )
+        .on("click", (e, g) => {
+          this.$emit("nodeClicked", g);
+        })
+        .on("dblclick", (e, g) => {
+          this.$emit("nodeDBLClicked", g);
+        });
 
-      this.linksText = g.append("g")
-          .selectAll("text")
-          .data(edges)
-          .enter()
-          .append("text")
-          .style("pointer-events", "none")
-          .attr("class", "line-text")
-          .attr('text-anchor', "middle")
-          .attr("fill-opacity", 1)
-          .style("cursor", "pointer")
-          .attr("pointer-events", "none").attr("font-size", 9)
-          .attr('xlink:href', function (d, i) {
-            return '#line' + i
-          })
-          .text((d) => {
-            return d.type;
-          })
+      this.gs
+        .append("circle")
+        .style("stroke-width", "2px")
+        .attr("class", "circle")
+        .attr("r", 20)
+        .attr("fill", (d, i) => {
+          return this.colorScale(d.labels[0]);
+        });
 
-
-      this.gs = g.selectAll(".circleText")
-          .data(nodes)
-          .enter()
-          .append("g")
-          .attr("transform", (d, i) => {
-            return "translate(" + d.x + "," + d.y + ")";
-          })
-          .call(d3.drag()
-              .on('start', this.dragstarted)
-              .on('drag', this.dragged)
-              .on('end', this.dragended)
-          )
-          .on("click", (e, g) => {
-            this.$emit("nodeClicked", g);
-          })
-          .attr("class", function (node, i) {
-            return "g_circle_" + i;
-          })//标记circle的父节点
-          .style("cursor", "pointer");
-
-      this.gs.append("circle")
-          .style("stroke-width", "2px")
-          .attr("class", "circle")
-          .attr("r", 25)
-          .attr("fill", (d, i) => {
-            return this.colorScale(d.labels[0]);
-          })
-
-
-      this.gs.append("text")
-          .attr("dy", ".35em")
-          .attr("text-anchor", "middle")//在圆圈中加上数据
-          .style('fill', "#FFFFFF")
-          .attr("font-size", 12)
-          .text((d) => {
-            return d.properties.name.substr(0, 3);
-          }).attr("color", "white")
-
+      this.gs
+        .append("text")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "middle")
+        .style("fill", "#FFFFFF")
+        .attr("font-size", 12)
+        .attr("color", "white")
+        .text((d) => {
+          return d.properties.name.substr(0, 3);
+        });
     },
     colorScale(type) {
       switch (type) {
-        case "have":
+        case "Person":
           return "#a3f364";
-        case "role":
-          return "#ffa1a1"
+        case "t":
+          return "#ffa1a1";
         case "director":
-          return "#a059f3"
-        case "movie":
-          return "#14ffc9"
+          return "#a059f3";
+        case "Movie":
+          return "#14ffc9";
+        case "author":
+          return "#84ffc9";
         default:
-          return "#ffa306"
+          return "#ffa306";
       }
     },
-    getMarkerArrow(i) {
-      this.svg.append("defs").append("marker")   //箭头
-          .attr("id", "arrow" + i)
-          .attr("markerUnits", "strokeWidth")//设置为strokeWidth箭头会随着线的粗细发生变化
-          .attr("markerUnits", "userSpaceOnUse")
-          .attr("markerWidth", 10)//标识的大小
-          .attr("markerHeight", 10)
-          .attr("viewBox", "0 -4 12 15")//坐标系的区域
-          .attr("refX", 0)//箭头坐标
-          .attr("refY", 0)
-          .attr("orient", 'auto')//绘制方向，可设定为：auto（自动确认方向）和 角度值
-          .append("svg:path")
-          .attr("stroke-width", 1)//箭头宽度
-          .attr("d", "M0,-5L10,0L0,5")//箭头的路径
-          .attr('fill', 'rgba(0,0,0, 0.4)');//箭头颜色
-      return "url(#arrow" + i + ")";
-    },
-    dragstarted(event) {
+    dragStarted(event) {
       if (!event.active) this.forceSimulation.alphaTarget(0.3).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
@@ -184,50 +217,54 @@ export default {
       event.subject.fx = event.x;
       event.subject.fy = event.y;
     },
-    dragended(event) {
+    dragEnded(event) {
       if (!event.active) this.forceSimulation.alphaTarget(0);
       event.subject.fx = null;
       event.subject.fy = null;
     },
 
     ticked() {
-      this.links.attr("x1", (d) => {
-        return d.source.x;
-      })
-          .attr("y1", (d) => {
-            return d.source.y;
-          })
-          .attr("x2", (d) => {
-            return d.target.x;
-          })
-          .attr("y2", (d) => {
-            return d.target.y;
-          });
+      this.links
+        .attr("x1", (d) => {
+          return d.source.x;
+        })
+        .attr("y1", (d) => {
+          return d.source.y;
+        })
+        .attr("x2", (d) => {
+          return d.target.x;
+        })
+        .attr("y2", (d) => {
+          return d.target.y;
+        });
 
-      this.linksText.attr("x", (d) => {
-        return (d.source.x + d.target.x) / 2;
-      })
-          .attr("y", (d) => {
-            return (d.source.y + d.target.y) / 2;
-          });
+      this.linksText
+        .attr("x", (d) => {
+          return (d.source.x + d.target.x) / 2;
+        })
+        .attr("y", (d) => {
+          return (d.source.y + d.target.y) / 2;
+        });
 
       this.gs.attr("transform", (d) => {
         return "translate(" + d.x + "," + d.y + ")";
       });
-    }
-
-  }
-}
+    },
+  },
+};
 </script>
 <style>
-.line-text {;
+.line-text {
   font-size: 0.6rem;
   font-weight: bold;
   fill: #9a9aa2;
+  fill-opacity: 1;
+  text-anchor: middle;
 }
 
 .circle {
   outline-color: orange;
   outline-width: 1rem;
+  opacity: 0.8;
 }
 </style>

@@ -22,11 +22,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/CommunityView.vue')
   },
   {
-    path: '/force',
-    name: 'Force',
-    component: () => import( '../views/ForceView.vue')
-  },
-  {
     path: '/relation/:node1/:node2',
     name: 'Relation',
     component: () => import( '../views/RelationshipView.vue')
@@ -37,12 +32,22 @@ const routes = [
     component: () => import( '../views/RelationshipView.vue')
   },
   {
-    path: '/node/:node1',
-    name: 'NodeC',
-    component: () => import( '../views/NodeView.vue')
+    path: '/PersonNode/:node1',
+    name: 'Node',
+    component: () => import( '../views/PersonNodeView.vue')
   },
   {
-    path: '/node',
+    path: '/PersonNode/',
+    name: 'NodeC',
+    component: () => import( '../views/PersonNodeView.vue')
+  },
+  {
+    path: '/MovieNode',
+    name: 'MovieNode',
+    component: () => import( '../views/MovieNodeView.vue')
+  },
+  {
+    path: '/Node/:type/:id',
     name: 'Node',
     component: () => import( '../views/NodeView.vue')
   },

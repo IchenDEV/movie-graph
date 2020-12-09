@@ -3203,14 +3203,9 @@ d3-selection@1, d3-selection@^1.1.0:
   resolved "https://registry.npm.taobao.org/d3-selection/download/d3-selection-1.4.2.tgz#dcaa49522c0dbf32d6c1858afc26b6094555bc5c"
   integrity sha1-3KpJUiwNvzLWwYWK/Ca2CUVVvFw=
 
-d3-selection@2:
+d3-selection@2, d3-selection@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/d3-selection/download/d3-selection-2.0.0.tgz#94a11638ea2141b7565f883780dabc7ef6a61066"
-  integrity sha1-lKEWOOohQbdWX4g3gNq8fvamEGY=
-
-d3-selection@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.npm.taobao.org/d3-selection/download/d3-selection-2.0.0.tgz?cache=0&sync_timestamp=1598219828617&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fd3-selection%2Fdownload%2Fd3-selection-2.0.0.tgz#94a11638ea2141b7565f883780dabc7ef6a61066"
   integrity sha1-lKEWOOohQbdWX4g3gNq8fvamEGY=
 
 d3-shape@1:

@@ -5,7 +5,6 @@ import store from './store'
 import vuetify from './plugins/vuetify';
 import ECharts from 'vue-echarts' // refers to components/ECharts.vue in webpack
 
-// import ECharts modules manually to reduce bundle size
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/component/tooltip'
 

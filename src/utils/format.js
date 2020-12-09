@@ -26,17 +26,14 @@ function neo4jDataToD3Data(data) {
                 else {
                     if (a.target > b.target)
                         return 1;
-
-
                     if (a.target < b.target)
                         return -1;
                     else
                         return 0;
-
                 }
             });
 
-            for (var i = 0; i < data.graph.relationships.length; i++) {
+            for (let i = 0; i < data.graph.relationships.length; i++) {
                 if (i !== 0 && data.graph.relationships[i].source === data.graph.relationships[i - 1].source && data.graph.relationships[i].target === data.graph.relationships[i - 1].target) {
                     data.graph.relationships[i].linknum = data.graph.relationships[i - 1].linknum + 1;
                 } else
