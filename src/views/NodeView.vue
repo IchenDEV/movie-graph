@@ -5,11 +5,7 @@
         <v-container>
           <v-row justify="space-between">
             <v-col cols="5" justify="center" align="center">
-              <v-img
-                height="100%"
-                width="100%"
-                src="https://tse2-mm.cn.bing.net/th/id/OIP.NAQub_yRSIzsetBq8y2RHwHaFj?pid=Api&rs=1"
-              ></v-img>
+              <v-img height="100%" width="100%" :src="info.img"></v-img>
             </v-col>
             <v-col cols="5" class="text-center pl-0">
               <v-row class="flex-column ma-0 fill-height" justify="center">
@@ -40,7 +36,7 @@
         </v-container>
       </v-card>
     </v-row>
-    <v-row v-if="type==='Movie'" class="mb-4" justify="center" align="center">
+    <v-row v-if="type === 'Movie'" class="mb-4" justify="center" align="center">
       <v-card class="d-inline-block mx-auto" style="padding:1rem">
         <v-container>
           <v-row justify="space-around">
@@ -86,7 +82,12 @@
         </v-container>
       </v-card>
     </v-row>
-    <v-row v-if="type==='Person'" class="mb-4" justify="center" align="center">
+    <v-row
+      v-if="type === 'Person'"
+      class="mb-4"
+      justify="center"
+      align="center"
+    >
       <v-card class="d-inline-block mx-auto" style="padding:1rem">
         <v-container>
           <v-row justify="space-around">
@@ -121,7 +122,7 @@
                         color="#036358"
                         style="text-align: center"
                       >
-                        <v-btn>More</v-btn>
+                        <v-btn @click="RecommendJmp(item.db_id)">More</v-btn>
                       </v-overlay>
                     </v-fade-transition>
                   </v-card>
@@ -206,6 +207,10 @@ export default {
       } else {
         this.info = this.info[0];
       }
+    },
+    RecommendJmp(id) {
+      console.log(12);
+      this.$router.push("../../node/Movie/" + id);
     },
   },
 };

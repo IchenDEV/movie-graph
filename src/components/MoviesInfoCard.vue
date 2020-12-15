@@ -48,7 +48,7 @@
                   color="#036358"
                   style="text-align: center"
                 >
-                  <v-btn>More</v-btn>
+                  <v-btn @click="RecommendJmp(item)">More</v-btn>
                 </v-overlay>
               </v-fade-transition>
             </v-card>
@@ -98,6 +98,10 @@ export default {
           this.show = false;
         }
       }
+    },
+    RecommendJmp(id) {
+      console.log(id)
+      this.$router.push("../../node/Movie/" + id);
     },
     NodeJump() {
       console.log(this.movie.labels[0]);

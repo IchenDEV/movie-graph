@@ -64,13 +64,12 @@
           >Search</v-btn
         >
       </v-card>
-
-      <movies-info-card
-        v-show="hidden"
-        style="position: absolute;right: 1rem;top:1.5rem"
-        :movie="Snode"
-      ></movies-info-card>
     </v-fab-transition>
+    <movies-info-card
+      v-show="hidden"
+      style="position: absolute;right: 1rem;top:1.5rem"
+      :movie="Snode"
+    ></movies-info-card>
   </div>
 </template>
 
@@ -174,10 +173,11 @@ export default {
       this.data = await this.getGraph();
     },
     nodeClicked(e) {
-      this.Snode = e;
+      if (e.labels[0] === "Movie" || e.labels[0] === "Person") {
+        this.Snode = e;
+      }
     },
     async dbcli(e) {
-      console.log(e);
       if (e.labels[0] === "Movie") {
         let data2 = neo4jDataToD3Data3(
           await getData(

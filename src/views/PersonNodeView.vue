@@ -50,12 +50,13 @@
           @click="searchClick"
           >Search</v-btn
         >
-      </v-card>
-    </v-fab-transition>
-    <movies-info-card
+      </v-card>   
+       <movies-info-card
       style="position: absolute;right: 1rem;top:1.5rem"
       :movie="SelectedNode"
     ></movies-info-card>
+    </v-fab-transition>
+
   </div>
 </template>
 
@@ -128,6 +129,7 @@ export default {
       await this.getGraph();
     },
     nodeClicked(e) {
+      console.log(e);
       this.SelectedNode = e;
     },
     async dbcli(e) {
