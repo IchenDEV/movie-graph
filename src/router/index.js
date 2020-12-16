@@ -22,6 +22,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/CommunityView.vue')
   },
   {
+    path: '/community/:id1',
+    name: 'Community',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CommunityView.vue')
+  },
+  {
+    path: '/community/:id1/:id2/',
+    name: 'Community',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CommunityView.vue')
+  },
+  {
+    path: '/community/:id1/:id2/:id3',
+    name: 'Community',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CommunityView.vue')
+  },
+  {
     path: '/relation/:node1/:node2',
     name: 'Relation',
     component: () => import( '../views/RelationshipView.vue')

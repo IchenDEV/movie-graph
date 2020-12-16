@@ -22,7 +22,7 @@
     <v-img
       v-if="!data"
       :src="require('../assets/bg11-1.svg')"
-      style="position: fixed;width: 80vw;top: calc(50% - 20vw);left:calc(50% - 35vw)"
+      class="back-img"
     ></v-img>
     <v-fab-transition>
       <v-card
@@ -50,13 +50,13 @@
           @click="searchClick"
           >Search</v-btn
         >
-      </v-card>   
-       <movies-info-card
+      </v-card>
+    </v-fab-transition>
+    <movies-info-card
+      v-show="hidden"
       style="position: absolute;right: 1rem;top:1.5rem"
       :movie="SelectedNode"
     ></movies-info-card>
-    </v-fab-transition>
-
   </div>
 </template>
 
@@ -119,45 +119,50 @@ export default {
   },
   methods: {
     async getGraph() {
-      this.data = neo4jDataToD3Data3(
-        await getData(
-          "http://admin.idevlab.cn:8008/surround_person_name/" + this.search
-        )
-      );
+      this.$store.state.isloading = true;
+      try {
+        this.data = neo4jDataToD3Data3(
+          await getData(
+            "http://admin.idevlab.cn:8008/surround_person_name/" + this.search
+          )
+        );
+      } catch {
+        alert("当前无信息");
+      } finally {
+        this.$store.state.isloading = false;
+      }
     },
     async searchClick() {
       await this.getGraph();
     },
     nodeClicked(e) {
-      console.log(e);
-      this.SelectedNode = e;
+      if (e.labels[0] === "Movie" || e.labels[0] === "Person")
+        this.SelectedNode = e;
     },
     async dbcli(e) {
-      console.log(e);
-      if (e.labels[0] === "Movie") {
-        let data2 = neo4jDataToD3Data3(
-          await getData(
-            "http://admin.idevlab.cn:8008/surround_movie_id/" + e.db_id
-          )
-        );
-        this.data = data2;
-      } else if (e.labels[0] === "Person") {
-        let data2 = neo4jDataToD3Data3(
-          await getData(
-            "http://admin.idevlab.cn:8008/surround_person_id/" + e.db_id
-          )
-        );
-        this.data = data2;
+      this.$store.state.isloading = true;
+      try {
+        if (e.labels[0] === "Movie") {
+          let data2 = neo4jDataToD3Data3(
+            await getData(
+              "http://admin.idevlab.cn:8008/surround_movie_id/" + e.db_id
+            )
+          );
+          this.data = data2;
+        } else if (e.labels[0] === "Person") {
+          let data2 = neo4jDataToD3Data3(
+            await getData(
+              "http://admin.idevlab.cn:8008/surround_person_id/" + e.db_id
+            )
+          );
+          this.data = data2;
+        }
+      } catch {
+        alert("当前无信息");
+      } finally {
+        this.$store.state.isloading = false;
       }
     },
   },
 };
 </script>
-
-<style scoped>
-.graph {
-  position: absolute;
-  width: 100vw;
-  height: calc(100vh - 1px);
-}
-</style>

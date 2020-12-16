@@ -1,148 +1,144 @@
 <template>
-  <v-col style="padding:1rem" justify="center">
-    <v-row class="mb-4">
-      <v-card class="d-inline-block mx-auto" style="padding:1rem">
-        <v-container>
-          <v-row justify="space-between">
-            <v-col cols="5" justify="center" align="center">
-              <v-img height="100%" width="100%" :src="info.img"></v-img>
-            </v-col>
-            <v-col cols="5" class="text-center pl-0">
-              <v-row class="flex-column ma-0 fill-height" justify="center">
-                <v-col class="px-0">
-                  {{ info.name }}
-                </v-col>
+  <div class="d-flex" justify="center" style="flex-wrap:wrap;margin:1rem;align-items: center;">
+    
+        <v-card class="mx-auto" max-width="600px" style="padding:1rem;margin:1rem;">
+          <v-container>
+            <v-row justify="space-between">
+              <v-col cols="5" justify="center" align="center">
+                <v-img height="100%" width="100%" style="    border-radius: 1rem;" :src="info.img"></v-img>
+              </v-col>
+              <v-col cols="5" class="text-center pl-0">
+                <v-row class="flex-column ma-0 fill-height" justify="center">
+                  <v-col class="px-0" style="max-height:6rem;font-size:2rem;">
+                    {{ info.name }}
+                  </v-col>
+                
+    
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
 
-                <v-col class="px-0">
-                  {{ info.summary }}
-                </v-col>
+        <v-card v-if="info.summary" class="d-inline-block mx-auto" style="padding:1rem;margin:1rem;">
+          <v-container>
+            <v-row justify="space-between">
+              
+              
+                  <div class="px-0" style="max-height:800px;    overflow-y: scroll;">
+                    {{ info.summary }}
+                  </div>
+            </v-row>
+          </v-container>
+        </v-card>
 
-                <v-col class="px-0">
-                  <v-btn icon>
-                    <v-icon>mdi-share-variant</v-icon>
-                  </v-btn>
-
-                  <v-btn icon>
-                    <v-icon>mdi-share-variant</v-icon>
-                  </v-btn>
-
-                  <v-btn icon>
-                    <v-icon>mdi-share-variant</v-icon>
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-row>
-    <v-row v-if="type === 'Movie'" class="mb-4" justify="center" align="center">
-      <v-card class="d-inline-block mx-auto" style="padding:1rem">
-        <v-container>
-          <v-row justify="space-around">
-            <div v-show="recommends">
-              <h2 style="padding: 0.5rem">Recommend</h2>
-              <div style="display: flex;flex-wrap: wrap;margin: 1rem">
-                <v-hover
-                  class="mx-auto"
-                  v-slot="{ hover }"
-                  v-for="(item, index) in recommends"
-                  style="text-align: center"
-                  :key="index"
-                >
-                  <v-card
-                    :elevation="hover ? 16 : 2"
-                    :class="{ 'on-hover': hover }"
+        <v-card  v-if="type === 'Movie'" class="d-inline-block mx-auto" style="padding:1rem;margin:1rem;">
+          <v-container>
+            <v-row justify="space-around">
+              <div v-show="recommends">
+                <h2 style="padding: 0.5rem">Recommend</h2>
+                <div style="display: flex;flex-wrap: wrap;margin: 1rem">
+                  <v-hover
                     class="mx-auto"
-                    height="100"
-                    style="margin: 0.5rem;overflow-y: hidden"
-                    width="130"
+                    v-slot="{ hover }"
+                    v-for="(item, index) in recommends"
+                    style="text-align: center"
+                    :key="index"
                   >
-                    <v-img :src="item.img" width="130" />
-                    <v-card-text
-                      class="font-weight-medium text-center subtitle-1"
+                    <v-card
+                      :elevation="hover ? 16 : 2"
+                      :class="{ 'on-hover': hover }"
+                      class="mx-auto"
+                      height="100"
+                      style="margin: 0.5rem;overflow-y: hidden"
+                      width="130"
                     >
-                      {{ item.name }}
-                    </v-card-text>
-                    <v-fade-transition>
-                      <v-overlay
-                        v-if="hover"
-                        absolute
-                        color="#036358"
-                        style="text-align: center"
+                      <v-img :src="item.img" width="130" />
+                      <v-card-text
+                        class="font-weight-medium text-center subtitle-1"
                       >
-                        <v-btn>More</v-btn>
-                      </v-overlay>
-                    </v-fade-transition>
-                  </v-card>
-                </v-hover>
+                        {{ item.name }}
+                      </v-card-text>
+                      <v-fade-transition>
+                        <v-overlay
+                          v-if="hover"
+                          absolute
+                          color="#036358"
+                          style="text-align: center"
+                        >
+                          <v-btn>More</v-btn>
+                        </v-overlay>
+                      </v-fade-transition>
+                    </v-card>
+                  </v-hover>
+                </div>
               </div>
-            </div>
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-row>
-    <v-row
-      v-if="type === 'Person'"
-      class="mb-4"
-      justify="center"
-      align="center"
-    >
-      <v-card class="d-inline-block mx-auto" style="padding:1rem">
-        <v-container>
-          <v-row justify="space-around">
-            <div v-show="recommends">
-              <h2 style="padding: 0.5rem">Community</h2>
-              <div style="display: flex;flex-wrap: wrap;margin: 1rem">
-                <v-hover
-                  class="mx-auto"
-                  v-slot="{ hover }"
-                  v-for="(item, index) in recommends"
-                  style="text-align: center"
-                  :key="index"
-                >
-                  <v-card
-                    :elevation="hover ? 16 : 2"
-                    :class="{ 'on-hover': hover }"
+            </v-row>
+          </v-container>
+        </v-card>
+    
+        <v-card min-width="400px"   v-if="type === 'Person'" class="d-inline-block mx-auto" style="padding:1rem;margin:1rem;">
+          <v-container>
+            <v-row justify="space-around">
+              <div v-show="community">
+                <h2 style="padding: 0.5rem">Community</h2>
+                <div style="display: flex;flex-wrap: wrap;margin: 1rem">
+                  <v-hover
                     class="mx-auto"
-                    height="100"
-                    style="margin: 0.5rem;overflow-y: hidden"
-                    width="130"
+                    v-slot="{ hover }"
+                    v-for="(item, index) in community.children"
+                    style="text-align: center"
+                    :key="index"
                   >
-                    <v-img :src="item.img" width="130" />
-                    <v-card-text
-                      class="font-weight-medium text-center subtitle-1"
+                    <v-card
+                      :elevation="hover ? 16 : 2"
+                      :class="{ 'on-hover': hover }"
+                      class="mx-auto"
+                      height="150"
+                      style="margin: 0.5rem;overflow-y: hidden"
+                      width="130"
                     >
-                      {{ item.name }}
-                    </v-card-text>
-                    <v-fade-transition>
-                      <v-overlay
-                        v-if="hover"
-                        absolute
-                        color="#036358"
-                        style="text-align: center"
+                     <v-img :src="item.img" width="130" />
+ 
+                      
+             
+                      <v-fade-transition>
+                        <v-overlay
+                          v-if="hover"
+                          absolute
+                          color="#036358"
+                          style="text-align: center"
+                        >
+                                       <v-card-text
+                        class="font-weight-medium text-center subtitle-1"
+                        style="line-height:1.2rem"
                       >
-                        <v-btn @click="RecommendJmp(item.db_id)">More</v-btn>
-                      </v-overlay>
-                    </v-fade-transition>
-                  </v-card>
-                </v-hover>
+                        {{ item.name }}
+                        </br>
+                         {{ item.triangleCount }}
+                      </v-card-text>
+                      <v-btn @click="CommunityJmp(item.id)">More</v-btn>
+                        </v-overlay>
+                      </v-fade-transition>
+                    </v-card>
+                  </v-hover>
+                </div>
               </div>
-            </div>
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-row>
-  </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+
+  </div>
 </template>
 <script>
 import { getData } from "@/utils/fetch";
-
+import { getPersonCommunityByName } from "@/utils/community";
 export default {
   name: "NodeView",
   data() {
     return {
       recommends: [],
+      community:[],
       info: null,
     };
   },
@@ -159,19 +155,21 @@ export default {
       return this.$route.params.type;
     },
   },
-  async mounted() {
-    console.log(this.type);
-    switch (this.type) {
+  async created() {
+    this.load();
+  },
+  methods: {
+    async load(){
+          switch (this.type) {
       case "Movie":
         await this.getMovie();
         await this.getRecommend();
         break;
       case "Person":
-        this.getPerson();
-        this.getCommunity();
+        await this.getPerson();
+        await this.getCommunity();
     }
-  },
-  methods: {
+    },
     async getRecommend() {
       this.recommends = await getData(
         "http://admin.idevlab.cn:8008/recommend_Movie/" + this.info.name
@@ -181,12 +179,11 @@ export default {
       }
     },
     async getCommunity() {
-      this.recommends = await getData(
-        "http://admin.idevlab.cn:8008/recommend_Movie/" + this.movie
-      );
-      if (this.recommends === 404) {
-        this.recommends = [];
-      }
+      this.community = await getPersonCommunityByName(this.info.name);
+      this.community.children.sort((a,b)=>{
+  return b.triangleCount-a.triangleCount; // a-b 正向排序，b-a反向排序
+})
+      console.log(this.community)
     },
     async getMovie() {
       this.info = await getData(
@@ -209,8 +206,13 @@ export default {
       }
     },
     RecommendJmp(id) {
-      console.log(12);
       this.$router.push("../../node/Movie/" + id);
+            this.load();
+      
+    },
+    CommunityJmp(id) {
+      this.$router.push("../../node/Person/" + id);
+      this.load();
     },
   },
 };

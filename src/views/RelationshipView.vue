@@ -1,5 +1,12 @@
 <template>
   <div>
+    <force-graph
+      class="graph"
+      @nodeDBLClicked="dbcli"
+      @nodeClicked="nodeClicked"
+      :data="data"
+    ></force-graph>
+
     <v-btn
       color="pink"
       fab
@@ -14,57 +21,50 @@
       <v-icon>mdi-rhombus-split</v-icon>
     </v-btn>
 
-    <force-graph
-      class="graph"
-      @nodeDBLClicked="dbcli"
-      @nodeClicked="nodeClicked"
-      :data="data"
-    ></force-graph>
     <v-img
       v-if="!data"
+      class="back-img"
       :src="require('../assets/bg11-1.svg')"
-      style="position: fixed;width: 80vw;top: calc(50% - 20vw);left:calc(50% - 35vw)"
     ></v-img>
-    <v-fab-transition>
-      <v-card
-        v-show="hidden"
-        max-width="300"
-        raised
-        style="padding: 2rem;margin: 2rem"
-      >
-        <h2 style="text-align: center;padding: 1rem">Relationship Finder</h2>
-        <v-autocomplete
-          :items="items"
-          :search-input.sync="node1"
-          :loading="isLoading"
-          filled
-          cache-items
-          hide-no-data
-          item-text="name"
-          item-value="name"
-          v-model="node0"
-        ></v-autocomplete>
-        <v-autocomplete
-          :items="items"
-          :search-input.sync="node2"
-          :loading="isLoading"
-          filled
-          cache-items
-          hide-no-data
-          item-text="name"
-          item-value="name"
-          solo
-          v-model="node"
-        ></v-autocomplete>
 
-        <v-btn
-          style="margin: auto;display: block"
-          color="primary"
-          @click="searchClick"
-          >Search</v-btn
-        >
-      </v-card>
-    </v-fab-transition>
+    <v-card
+      v-show="hidden"
+      max-width="300"
+      raised
+      style="padding: 2rem;margin: 2rem"
+    >
+      <h2 style="text-align: center;padding: 1rem">Relationship Finder</h2>
+      <v-autocomplete
+        :items="items"
+        :search-input.sync="node1"
+        :loading="isLoading"
+        filled
+        cache-items
+        hide-no-data
+        item-text="name"
+        item-value="name"
+        v-model="node0"
+      ></v-autocomplete>
+      <v-autocomplete
+        :items="items"
+        :search-input.sync="node2"
+        :loading="isLoading"
+        filled
+        cache-items
+        hide-no-data
+        item-text="name"
+        item-value="name"
+        solo
+        v-model="node"
+      ></v-autocomplete>
+
+      <v-btn
+        style="margin: auto;display: block"
+        color="primary"
+        @click="searchClick"
+        >Search</v-btn
+      >
+    </v-card>
     <movies-info-card
       v-show="hidden"
       style="position: absolute;right: 1rem;top:1.5rem"
@@ -178,30 +178,29 @@ export default {
       }
     },
     async dbcli(e) {
-      if (e.labels[0] === "Movie") {
-        let data2 = neo4jDataToD3Data3(
-          await getData(
-            "http://admin.idevlab.cn:8008/surround_movie_id/" + e.db_id
-          )
-        );
-        this.data = data2;
-      } else if (e.labels[0] === "Person") {
-        let data2 = neo4jDataToD3Data3(
-          await getData(
-            "http://admin.idevlab.cn:8008/surround_person_id/" + e.db_id
-          )
-        );
-        this.data = data2;
+      this.$store.state.isloading = true;
+      try {
+        if (e.labels[0] === "Movie") {
+          let data2 = neo4jDataToD3Data3(
+            await getData(
+              "http://admin.idevlab.cn:8008/surround_movie_id/" + e.db_id
+            )
+          );
+          this.data = data2;
+        } else if (e.labels[0] === "Person") {
+          let data2 = neo4jDataToD3Data3(
+            await getData(
+              "http://admin.idevlab.cn:8008/surround_person_id/" + e.db_id
+            )
+          );
+          this.data = data2;
+        }
+      } finally {
+        this.$store.state.isloading = false;
       }
     },
   },
 };
 </script>
 
-<style>
-.graph {
-  position: absolute;
-  width: 100vw;
-  height: calc(100vh - 1px);
-}
-</style>
+<style></style>

@@ -11,7 +11,7 @@
       @click="hidden = !hidden"
       style="z-index:999"
     >
-      <v-icon>mdi-rhombus-spli</v-icon>
+      <v-icon>mdi-rhombus-split</v-icon>
     </v-btn>
     <force-graph
       class="graph"
@@ -22,7 +22,7 @@
     <v-img
       v-if="!data"
       :src="require('../assets/bg11-1.svg')"
-      style="position: fixed;width: 80vw;top: calc(50% - 20vw);left:calc(50% - 35vw)"
+      class="back-img"
     ></v-img>
     <v-fab-transition>
       <v-card
@@ -37,6 +37,7 @@
           :search-input.sync="search"
           :loading="isLoading"
           filled
+          raised
           cache-items
           hide-no-data
           item-text="name"
@@ -53,6 +54,7 @@
       </v-card>
     </v-fab-transition>
     <movies-info-card
+      v-show="hidden"
       style="position: absolute;right: 1rem;top:1.5rem"
       :movie="SelectedNode"
     ></movies-info-card>
@@ -118,46 +120,54 @@ export default {
   methods: {
     async getGraph() {
       let nodeId;
+
       this.entries.forEach((element) => {
         if (element.name === this.node) nodeId = element.id;
       });
-      this.data = neo4jDataToD3Data3(
-        await getData(
-          "http://admin.idevlab.cn:8008/surround_movie_name/" + this.node
-        )
-      );
+      try {
+        this.$store.state.isloading = true;
+        this.data = neo4jDataToD3Data3(
+          await getData(
+            "http://admin.idevlab.cn:8008/surround_movie_name/" + this.node
+          )
+        );
+      } catch {
+        alert("当前无信息");
+      } finally {
+        this.$store.state.isloading = false;
+      }
     },
     async searchClick() {
       await this.getGraph();
     },
     nodeClicked(e) {
-      this.SelectedNode = e;
+      if (e.labels[0] === "Movie" || e.labels[0] === "Person")
+        this.SelectedNode = e;
     },
     async dbcli(e) {
-      console.log(e);
-      if (e.labels[0] === "Movie") {
-        let data2 = neo4jDataToD3Data3(
-          await getData(
-            "http://admin.idevlab.cn:8008/surround_movie_id/" + e.db_id
-          )
-        );
-        this.data = data2;
-      } else if (e.labels[0] === "Person") {
-        let data2 = neo4jDataToD3Data3(
-          await getData(
-            "http://admin.idevlab.cn:8008/surround_person_id/" + e.db_id
-          )
-        );
-        this.data = data2;
+      try {
+        this.$store.state.isloading = true;
+        if (e.labels[0] === "Movie") {
+          let data2 = neo4jDataToD3Data3(
+            await getData(
+              "http://admin.idevlab.cn:8008/surround_movie_id/" + e.db_id
+            )
+          );
+          this.data = data2;
+        } else if (e.labels[0] === "Person") {
+          let data2 = neo4jDataToD3Data3(
+            await getData(
+              "http://admin.idevlab.cn:8008/surround_person_id/" + e.db_id
+            )
+          );
+          this.data = data2;
+        }
+      } catch {
+        alert("当前无信息");
+      } finally {
+        this.$store.state.isloading = false;
       }
     },
   },
 };
 </script>
-<style>
-.graph {
-  position: absolute;
-  width: 100vw;
-  height: calc(100vh - 1px);
-}
-</style>

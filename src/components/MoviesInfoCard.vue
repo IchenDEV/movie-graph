@@ -2,7 +2,7 @@
   <v-card
     class="mx-auto"
     max-width="344"
-    max-height="500"
+    max-height="90vh"
     v-if="movie"
     raised
     style="overflow: auto;"

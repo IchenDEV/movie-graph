@@ -29,6 +29,12 @@ export default {
   },
   mounted() {
     if (this.data) this.draw();
+    window.onresize = () => {
+      return (() => {
+         if (this.data) this.draw();
+        window.screenWidth = document.body.clientWidth;
+      })();
+    };
   },
   methods: {
     setLinkNumbers(group) {
@@ -59,7 +65,7 @@ export default {
 
       const containerWidth = this.$refs.chartRef.parentElement.offsetWidth;
       const containerHeight = this.$refs.chartRef.parentElement.offsetHeight;
-      const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+      const margin = { top: 0, right: 0, bottom: 0, left: 0 };
       const width = containerWidth - margin.left - margin.right;
       const height = containerHeight - margin.top - margin.bottom;
       this.svg = d3
@@ -174,11 +180,16 @@ export default {
 
       this.gs
         .append("circle")
-        .style("stroke-width", "2px")
         .attr("class", "circle")
         .attr("r", 20)
         .attr("fill", (d, i) => {
           return this.colorScale(d.labels[0]);
+        })
+        .on("click", (e, g) => {
+          this.$emit("nodeClicked", g);
+        })
+        .on("dblclick", (e, g) => {
+          this.$emit("nodeDBLClicked", g);
         });
 
       this.gs
@@ -195,7 +206,7 @@ export default {
     colorScale(type) {
       switch (type) {
         case "Person":
-          return "#a3f364";
+          return "#a3f304";
         case "t":
           return "#ffa1a1";
         case "director":
@@ -265,6 +276,7 @@ export default {
 .circle {
   outline-color: orange;
   outline-width: 1rem;
-  opacity: 0.8;
+  stroke: #ffd000;
+  stroke-width: 1px;
 }
 </style>

@@ -4,7 +4,7 @@
     <div class="cover">
       <h1 style="z-index: 10;color: white">Want Find Movie's Relationships?</h1>
       <h1 style="z-index: 10;color: white">or related movies</h1>
-      <v-btn max-width="100" style="margin-right: auto;margin-left: auto" color="primary" @click="$router.push('/node')">
+      <v-btn max-width="100" style="margin-right: auto;margin-left: auto" color="primary" @click="$router.push('/relate')">
         Get Start
       </v-btn>
     </div>
@@ -29,7 +29,7 @@ video {
 
 .cover {
   position: absolute;
-  height: calc(100vh - 64px);
+  height: calc(100vh);
   width: 100vw;
   display: flex;
   justify-content: center;
