@@ -25,22 +25,39 @@ async function getPersonCommunityByName(name) {
 async function getCommunityByID(deep, id) {
   let data = await getData("../../res.json");
   for (let i1 of data.children) {
-    if (deep==1&&i1.id == id) {
+    if (deep == 1 && i1.id == id) {
+
       return i1;
     }
     for (let i2 of i1.children) {
-      if (deep==2&&i2.id == id) {
+      if (deep == 2 && i2.id == id) {
+ 
         return i2;
       }
       for (let i3 of i2.children) {
-        if (deep==3&&i3.id == id) {
+        if (deep == 3 && i3.id == id) {
           return i3;
         }
       }
     }
   }
-  console.log(null)
   return null;
 }
 
-export { getPersonCommunityByName, getPersonCommunityByID,getCommunityByID };
+async function getCommunityPrimaryNode(node) {
+  if (!node.children) return node;
+  let maxNode = null;
+  for (let i1 of node.children) {
+    let tempNode = getCommunityPrimaryNode(i1);
+    if (maxNode === null || tempNode.triangleCount > tempNode.triangleCount) {
+      maxNode = tempNode;
+    }
+  }
+  return maxNode;
+}
+export {
+  getPersonCommunityByName,
+  getPersonCommunityByID,
+  getCommunityByID,
+  getCommunityPrimaryNode,
+};

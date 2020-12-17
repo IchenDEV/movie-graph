@@ -160,6 +160,7 @@ export default {
   },
   methods: {
     async load(){
+      window.scrollTo(0,0);
           switch (this.type) {
       case "Movie":
         await this.getMovie();
@@ -181,7 +182,7 @@ export default {
     async getCommunity() {
       this.community = await getPersonCommunityByName(this.info.name);
       this.community.children.sort((a,b)=>{
-  return b.triangleCount-a.triangleCount; // a-b 正向排序，b-a反向排序
+  return b.triangleCount-a.triangleCount; 
 })
       console.log(this.community)
     },
@@ -207,7 +208,7 @@ export default {
     },
     RecommendJmp(id) {
       this.$router.push("../../node/Movie/" + id);
-            this.load();
+      this.load();
       
     },
     CommunityJmp(id) {

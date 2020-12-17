@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app>
+    <v-app-bar app class="primary-blur" dark>
       <div class="d-flex align-center">
         <v-app-bar-nav-icon
           style="margin-left:-0.4rem;"
@@ -100,5 +100,10 @@ export default {
   width: 100vw;
   height: calc(100vh);
   margin-top: -2rem;
+}
+.v-application .primary-blur {
+    background-color: #1976d2d9 !important;
+    border-color: #1976d2 !important;
+    backdrop-filter: blur(10px);
 }
 </style>
