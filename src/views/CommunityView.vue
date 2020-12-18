@@ -1,19 +1,19 @@
 <template>
   <div>
     <v-breadcrumbs :items="breadcrumbs"></v-breadcrumbs>
-     <h1 class="text-center">Community {{data.id}}</h1><br>
+    <h1 v-if="data.primary"  class="text-center">{{ data.primary.name }}'s Community</h1>
+    <br />
     <div class="d-flex" justify="space-between" style="flex-wrap:wrap">
-     
       <v-card
         style="margin:0.5rem;overflow: hidden"
-        width="5rem"
-        height="15rem"
+        width="10rem"
+        height="20rem"
         v-for="(i, index) in data.children"
         :key="index"
         @click="godeep(i)"
       >
         <div v-if="path.length == 3">
-          <v-img :src="i.img" width="130" />
+          <v-img v-if="i.img" :src="i.img" width="10rem" />
 
           <v-card-text
             class="font-weight-medium text-center subtitle-1"
@@ -23,13 +23,14 @@
           </v-card-text>
         </div>
         <div v-else>
-          <v-img v-if="i.primary" :src="i.primary.img" width="130" />
+          <v-img v-if="i.primary&&i.primary.img" :src="i.primary.img" width="10rem" />
 
           <v-card-text
+          v-if="i.primary"
             class="font-weight-medium text-center subtitle-1"
             style="line-height:1.2rem"
           >
-            Community {{ i.id }}
+            {{ i.primary.name }}'s Community
           </v-card-text>
         </div>
       </v-card>
@@ -85,15 +86,16 @@ export default {
       ];
 
       this.data = await getData("../../res.json");
-
+      this.data.primary = await getCommunityPrimaryNode(this.data);
       if (this.id1) {
         this.path.push(this.data);
         this.data = await getCommunityByID(1, this.id1);
         for (let index of this.data.children) {
           index.primary = await getCommunityPrimaryNode(index);
         }
+        this.data.primary = await getCommunityPrimaryNode(this.data);
         this.breadcrumbs.push({
-          text: "Community " + this.data.id,
+          text: this.data.primary.name + "'s Community ",
           disabled: false,
           href: "/#/community/" + this.data.id,
         });
@@ -105,8 +107,9 @@ export default {
         for (let index of this.data.children) {
           index.primary = await getCommunityPrimaryNode(index);
         }
+        this.data.primary = await getCommunityPrimaryNode(this.data);
         this.breadcrumbs.push({
-          text: "Community " + this.data.id,
+          text: this.data.primary.name + "'s Community ",
           disabled: false,
           href: "/#/community/" + this.id1 + "/" + this.data.id,
         });
@@ -115,8 +118,9 @@ export default {
       if (this.id3) {
         this.path.push(this.data);
         this.data = await getCommunityByID(3, this.id3);
+        this.data.primary = await getCommunityPrimaryNode(this.data);
         this.breadcrumbs.push({
-          text: "Community " + this.data.id,
+          text: this.data.primary.name + "'s Community ",
           disabled: false,
           href:
             "/#/community/" + this.id1 + "/" + this.id2 + "/" + this.data.id,
