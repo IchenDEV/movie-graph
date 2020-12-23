@@ -79,7 +79,6 @@ const neo4jDataToD3Data2 = (data) => {
     });
     graph.nodes = deWeightThree(graph.nodes);
     graph.relationships = deWeightThree(graph.relationships);
-    console.log(JSON.stringify(graph))
     return graph;
 }
 
@@ -104,6 +103,7 @@ const neo4jDataToD3Data3 = (data) => {
         relationship.type = relationship.label;
         relationship.source = relationship.from;
         relationship.target = relationship.to;
+        relationship.value = 10;
         graph.relationships.push(relationship);
     });
 

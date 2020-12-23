@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex" justify="center" style="flex-wrap:wrap;margin:1rem;align-items: center;">
     
-        <v-card class="mx-auto" max-width="600px" style="padding:1rem;margin:1rem;">
+        <v-card class="mx-auto" max-width="800px" min-width="60%" min-height="400" style="padding:1rem;margin:1rem;">
           <v-container>
             <v-row justify="space-between">
               <v-col cols="5" justify="center" align="center">
@@ -77,7 +77,7 @@
           </v-container>
         </v-card>
     
-        <v-card min-width="400px"   v-if="type === 'Person'" class="d-inline-block mx-auto" style="padding:1rem;margin:1rem;">
+        <v-card min-width="40vw" max-width="600"   v-if="type === 'Person'" class="d-inline-block mx-auto" style="padding:1rem;margin:1rem;">
           <v-container>
             <v-row justify="space-around">
               <div v-show="community">
@@ -128,18 +128,29 @@
           </v-container>
         </v-card>
 
+        <v-card min-width="40vw" min-height="40vw"   v-if="type === 'Person'" class="d-inline-block mx-auto" style="margin:1rem;">
+          <v-container>
+             <force-graph
+              style="min-width:600px;min-height:600px"
+      :data="comdata"
+    ></force-graph>
+          </v-container>
+        </v-card>
   </div>
 </template>
 <script>
 import { getData } from "@/utils/fetch";
-import { getPersonCommunityByName } from "@/utils/community";
+import { getPersonCommunityByName,genCommunityMap } from "@/utils/community";
+import ForceGraph from "@/components/graph/ForceGraph";
 export default {
   name: "NodeView",
+  components: {  ForceGraph },
   data() {
     return {
       recommends: [],
       community:[],
       info: null,
+      comdata:null
     };
   },
   computed: {
@@ -181,10 +192,10 @@ export default {
     },
     async getCommunity() {
       this.community = await getPersonCommunityByName(this.info.name);
-      this.community.children.sort((a,b)=>{
-  return b.triangleCount-a.triangleCount; 
-})
-      console.log(this.community)
+      this.community.children.sort((a,b)=>{return b.triangleCount-a.triangleCount; })
+      this.comdata=  await genCommunityMap(this.community);
+
+      console.log(this.comdata);
     },
     async getMovie() {
       this.info = await getData(

@@ -43,7 +43,7 @@ export default {
       const linksB = [];
       for (let i = 0; i < len; i++) {
         const link = group[i];
-        if (link.source.name < link.target.name) {
+        if (link.source < link.target) {
           linksA.push(link);
         } else {
           linksB.push(link);
@@ -99,9 +99,9 @@ export default {
       // 两点之间的线根据两点的 name 属性设置为同一个 key，加入到 linkGroup 中，给两点之间的所有边分成一个组
       edges.forEach((link) => {
         const key =
-          link.source.name < link.target.name
-            ? link.source.name + ":" + link.target.name
-            : link.target.name + ":" + link.source.name;
+          link.source < link.target
+            ? link.source + ":" + link.target
+            : link.target + ":" + link.source;
         if (!linkGroup.hasOwnProperty(key)) {
           linkGroup[key] = [];
         }
@@ -121,7 +121,8 @@ export default {
         .force("link")
         .links(edges)
         .distance((d) => {
-          return 100;
+          console.log(d)
+          return d.value*10;
         });
 
       this.links = g
@@ -200,6 +201,7 @@ export default {
         .attr("font-size", 12)
         .attr("color", "white")
         .text((d) => {
+          console.log(d)
           return d.properties.name.substr(0, 3);
         });
     },
@@ -215,6 +217,8 @@ export default {
           return "#14ffc9";
         case "author":
           return "#84ffc9";
+        case "Community-Host":
+          return "#a059f3";
         default:
           return "#ffa306";
       }

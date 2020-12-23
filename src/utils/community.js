@@ -26,12 +26,10 @@ async function getCommunityByID(deep, id) {
   let data = await getData("../../res.json");
   for (let i1 of data.children) {
     if (deep == 1 && i1.id == id) {
-
       return i1;
     }
     for (let i2 of i1.children) {
       if (deep == 2 && i2.id == id) {
- 
         return i2;
       }
       for (let i3 of i2.children) {
@@ -55,9 +53,49 @@ async function getCommunityPrimaryNode(node) {
   }
   return maxNode;
 }
+
+async function genCommunityMap(node) {
+  let graph = { nodes: [], relationships: [] };
+  let primary = await getCommunityPrimaryNode(node);
+  graph.nodes.push({
+    id: 0,
+    labels: ["Community-Host"],
+    label: "Community-Son",
+    properties: {
+      img: primary.img,
+      summary: primary.summary,
+      name: "Community",
+    },
+  });
+  node.children.sort((a,b)=>{a.triangleCount<b.triangleCount})
+  node.children.slice(0,100).forEach(async (node) => {
+    let primary = await getCommunityPrimaryNode(node);
+    graph.nodes.push({
+      id: node.id,
+      labels: ["Community-Son"],
+      properties: {
+        img: primary.img,
+        summary: primary.summary,
+        name: primary.name,
+      },
+    });
+
+    graph.relationships.push({
+      id: node.id,
+      name: node.id,
+      type: node.triangleCount,
+      source: 0,
+      target: node.id,
+      value: 10000/node.triangleCount,
+    });
+  });
+  return graph;
+}
+
 export {
   getPersonCommunityByName,
   getPersonCommunityByID,
   getCommunityByID,
   getCommunityPrimaryNode,
+  genCommunityMap,
 };
