@@ -5,7 +5,7 @@
           <v-container>
             <v-row justify="space-between">
               <v-col cols="5" justify="center" align="center">
-                <v-img height="100%" width="100%" style="    border-radius: 1rem;" :src="info.img"></v-img>
+                <img style="height:100%;width:100%;border-radius: 1rem;" :src="info.img"/>
               </v-col>
               <v-col cols="5" class="text-center pl-0">
                 <v-row class="flex-column ma-0 fill-height" justify="center">
@@ -53,7 +53,7 @@
                       style="margin: 0.5rem;overflow-y: hidden"
                       width="130"
                     >
-                      <v-img :src="item.img" width="130" />
+                      <img :src="item.img" style="width:130px" />
                       <v-card-text
                         class="font-weight-medium text-center subtitle-1"
                       >
@@ -98,7 +98,7 @@
                       style="margin: 0.5rem;overflow-y: hidden"
                       width="130"
                     >
-                     <v-img :src="item.img" width="130" />
+                     <img :src="item.img" style=" width:130px" />
  
                       
              

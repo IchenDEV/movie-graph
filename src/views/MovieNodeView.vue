@@ -19,11 +19,11 @@
       @nodeDBLClicked="dbcli"
       @nodeClicked="nodeClicked"
     ></force-graph>
-    <v-img
+    <img
       v-if="!data"
       :src="require('../assets/bg11-1.svg')"
       class="back-img"
-    ></v-img>
+    />
     <v-fab-transition>
       <v-card
         v-show="hidden"

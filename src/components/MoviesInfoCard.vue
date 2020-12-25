@@ -7,11 +7,11 @@
     raised
     style="overflow: auto;"
   >
-    <v-img
+    <img
       v-if="movie.properties.img"
       :src="movie.properties.img"
-      height="200px"
-    ></v-img>
+      style="height:300px;width:100%"
+    />
     <v-card-title>
       {{ movie.properties.name }}
     </v-card-title>
@@ -37,7 +37,7 @@
               style="margin: 0.5rem;overflow-y: hidden"
               width="130"
             >
-              <v-img :src="item.img" width="130" />
+              <img :src="item.img" style="width:130px" />
               <v-card-text class="font-weight-medium text-center subtitle-1">
                 {{ item.name }}
               </v-card-text>

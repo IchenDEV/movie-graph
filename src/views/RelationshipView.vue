@@ -21,12 +21,11 @@
       <v-icon>mdi-rhombus-split</v-icon>
     </v-btn>
 
-    <v-img
+    <img
       v-if="!data"
       class="back-img"
       :src="require('../assets/bg11-1.svg')"
-    ></v-img>
-
+    />
     <v-card
       v-show="hidden"
       max-width="300"

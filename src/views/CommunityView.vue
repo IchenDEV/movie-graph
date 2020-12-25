@@ -13,7 +13,7 @@
         @click="godeep(i)"
       >
         <div v-if="path.length == 3">
-          <v-img v-if="i.img" :src="i.img" width="10rem" />
+          <img v-if="i.img" :src="i.img" style="width:10rem" />
 
           <v-card-text
             class="font-weight-medium text-center subtitle-1"
@@ -23,7 +23,7 @@
           </v-card-text>
         </div>
         <div v-else>
-          <v-img v-if="i.primary&&i.primary.img" :src="i.primary.img" width="10rem" />
+          <img v-if="i.primary&&i.primary.img" :src="i.primary.img" style="width:10rem" />
 
           <v-card-text
           v-if="i.primary"
