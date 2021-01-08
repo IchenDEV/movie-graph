@@ -86,14 +86,9 @@ export default {
           })
         )
         .force("center", d3.forceCenter(width / 2, height / 2))
-        .force("charge", d3.forceManyBody().strength(-20))
-        .force(
-          "collide",
-          d3
-            .forceCollide()
-            .radius(30)
-            .iterations(2)
-        );
+         .force('charge', d3.forceManyBody().strength(-20))
+        // 碰撞力 防止节点重叠
+        .force('collide',d3.forceCollide().radius(20).iterations(2));
 
       const linkGroup = {};
       // 两点之间的线根据两点的 name 属性设置为同一个 key，加入到 linkGroup 中，给两点之间的所有边分成一个组
@@ -121,8 +116,7 @@ export default {
         .force("link")
         .links(edges)
         .distance((d) => {
-          console.log(d)
-          return d.value*10;
+          return d.value*25;
         });
 
       this.links = g
@@ -201,7 +195,6 @@ export default {
         .attr("font-size", 12)
         .attr("color", "white")
         .text((d) => {
-          console.log(d)
           return d.properties.name.substr(0, 3);
         });
     },
@@ -224,7 +217,8 @@ export default {
       }
     },
     dragStarted(event) {
-      if (!event.active) this.forceSimulation.alphaTarget(0.3).restart();
+       event.sourceEvent.stopPropagation(); 
+      if (!event.active) this.forceSimulation.alphaTarget(0.8).restart();
       event.subject.fx = event.subject.x;
       event.subject.fy = event.subject.y;
     },

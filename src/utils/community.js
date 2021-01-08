@@ -67,7 +67,12 @@ async function genCommunityMap(node) {
       name: "Community",
     },
   });
+  let max=0 ;let min=9999
   node.children.sort((a,b)=>{a.triangleCount<b.triangleCount})
+  node.children.slice(0,100).forEach((node)=>{
+    if(node.triangleCount<min)min =node.triangleCount;
+    if(node.triangleCount>max)max =node.triangleCount;
+  })
   node.children.slice(0,100).forEach(async (node) => {
     let primary = await getCommunityPrimaryNode(node);
     graph.nodes.push({
@@ -86,7 +91,7 @@ async function genCommunityMap(node) {
       type: node.triangleCount,
       source: 0,
       target: node.id,
-      value: 10000/node.triangleCount,
+      value: 15*node.triangleCount/max,
     });
   });
   return graph;

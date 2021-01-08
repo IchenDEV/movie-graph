@@ -4,7 +4,7 @@
     <div class="cover">
       <h1 style="z-index: 10;color: white">Want Find Movie's Relationships?</h1>
       <h1 style="z-index: 10;color: white">or related movies</h1>
-      <v-btn max-width="100" style="margin-right: auto;margin-left: auto" color="primary" @click="$router.push('/relate')">
+      <v-btn max-width="100" style="margin-right: auto;margin-left: auto" color="primary" @click="$router.push('/PersonNode')">
         Get Start
       </v-btn>
     </div>
